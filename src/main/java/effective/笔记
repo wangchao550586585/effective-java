@@ -1,0 +1,68 @@
+第一部分
+1:服务提供者框架模式
+    服务提供者框架:多个服务提供者实现一个服务，系统为服务提供者的客户端提供多个实现,并把他们从多个实现中解耦出来
+     Driver:服务提供者接口
+     Connection:服务接口
+     DriverManager.getConnection()：服务访问API
+     DriverManager.registerDriver():提供者注册API
+2:telescopingconstructor.NutritionFacts:重叠构造器模式,无法阅读,设置不想设置数
+  javabeans.NutritionFacts:javaBean模式,易于阅读,自由灵活。由于操作较多,无法保证一致性
+  builder.NutritionFacts:builder模式,
+3:field.Elvis:使用final构造单例对象,可能通过反射构造对象
+  method.Elvis:静态工厂方法
+  serializable.Elvis:序列化
+  enumoration.Elvis:枚举
+4:UtilityClass:通过私有构造强化不可实例化的能力
+5:slowversion.Person:每次被调用都会新建一个Calender
+  fastversion.Person:使用静态初始化器优化,可以使用延迟初始化优化,但会更加复杂
+  Sum:优先使用基本类型而不是装箱类型,new了将近很多个Long对象
+6:Stack:维护对这些对象的过期引用,会造成内存泄漏
+  Stack2:清空过期引用
+  只要是类自己管理内存,就需要注意内存泄漏问题
+  内存泄漏:
+            缓存:用WeakHashMap代表缓存解决,当除了自身有对key的引用外，此key没有其他引用那么此map会自动丢弃此值
+                后台线程解决
+                缓存添加新item顺便清理,LinkedHashMap.removeEldestEntry,插入元素时移除最老的元素
+第二部分
+8:CaseInsensitiveString:非对称
+  Color/Point/ColorPoint:传递性
+  CounterPoint/CounterPointTest:里氏替换原则
+  无法在扩展可实例化的类的同时,既增加新的值组件,同时有保留equals规定,可以使用组合
+  可以在一个抽象类的子类中增加新的值组件,不会违反非对称和对称性
+9:hashCode
+10:toString
+11:clone
+    1.5引入了协变返回类型作为泛型,覆盖方法的返回类型可以是被覆盖方法的返回类型的子类 ,clone可以返回实现类的类型
+12:Comparable
+
+第三部分
+14:Complex:对操作数进行运算不修改它
+    不可变对象,线程安全,可以用生成静态变量和缓存对象降低内存占用以及垃圾回收成本,可被自由共享甚至共享内部信息
+    缺点:每个不同值需要单独的对象,将对象作为基本类型运算or使用可变配套类,如StringBuild针对String
+
+18:接口通常是定义允许多个实现的类型的最佳途径,但是当演变的容易性>灵活性和功能时,抽象类定义类型更好,同时应该考虑提供骨架实现类
+   在抽象类中添加方法,只需要包含合理的默认方法即可，而接口不行,
+
+19:常量接口,使用这些常量的类实现这个接口,使用常量这是实现细节,导致泄漏实现细节,以及修改接口时会污染其子类
+    接口只能被定义类型,而不应该导出常量
+
+22:静态内部类:公有的辅助类,代表外围类所代表的对象的组件
+非静态内部类:Adapter,Map的keySet,具有外围实例
+匿名内部类:动态创建函数对象(利用匿名Comparator进行排序)
+            创建过程对象(Runnable,Thread)
+            静态工厂方法内部IntArrays.intArrayAsList
+        非静态环境中,才有外围实例,静态环境中,无法拥有任何静态成员
+单个方法之外依然可见/类太长，选择内部类,如果需要指向其外部实例,则选择非静态内部类
+如果只在一个地方创建实例,匿名类。否则局部类
+
+
+28:通配符类型,PESC:生产者继承 push，消费者super pop
+
+37:标记接口(没有包含方法声明的接口,如Serializable):定义一个任何新方法都不会与之关联的类型
+标记注解:标记元素并非类和接口,且可能未来添加更多信息
+优点：标记接口定义的类型由被标记的类实现的,且标记接口可以用它将唯一的接口扩展成它适用的类
+如何选择声明标记注解还是标记接口
+    作用元素不是接口和类,必注解
+    考虑编写一个还是多个只接受有这种标记的方法,必接口
+    限制此标记只用于特殊接口的元素,必接口
+    其他注解
